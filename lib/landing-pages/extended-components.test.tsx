@@ -55,7 +55,7 @@ describe("Segmented size", () => {
 });
 
 describe("WalletCard headerLabel", () => {
-  const design = { total_stamps: 6, background_color: "#FFFFFF", logo_url: "/themes/barber/logo.avif" };
+  const design = { total_stamps: 6, background_color: "#FFFFFF", logo_url: "/themes/gaspard-gus/logo.avif" };
 
   test("a level card shows its level name over the count, where the program's name was", () => {
     const html = textOf(render(<WalletCard design={design} stamps={4} headerLabel="Silver" />));

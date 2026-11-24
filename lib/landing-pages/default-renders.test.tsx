@@ -25,11 +25,13 @@ import { FAQList } from "@/components/ui/FAQList";
 import { QRCodeSkeleton } from "@/components/ui/QRCodeSkeleton";
 import { ScannerLoop } from "@/components/ui/ScannerLoop";
 import { Segmented } from "@/components/ui/Segmented";
+import { platformFanSlots } from "@/lib/hero-fan";
 import { renderEn, renderEnAsync } from "../testing/render-en";
 import { mockEnglishServerTranslations } from "../testing/server-intl";
 import { PLATFORM } from "./copy/platform";
 import { PROGRAM_TYPES } from "./copy/program-types";
 import { loyaltyLink } from "./preview-nav";
+import { phoneDeck } from "./platform/phone-stack";
 
 // The gallery is an async server component that asks next-intl for its words.
 await mockEnglishServerTranslations();
@@ -140,7 +142,10 @@ describe("what Platform's own pieces render when the previews' new props are lef
   });
 
   test("PlatformHero: the headline, the phone stack and the fan of seven cards, then the trial and demo buttons, with no label or sub", async () => {
-    expect(await renderEnAsync(<PlatformHero market="us" />)).toMatchSnapshot();
+    // The year-round cards, whichever season the page is set to.
+    const hero = <PlatformHero market="us" slots={platformFanSlots("default")} deck={phoneDeck("default")} />;
+
+    expect(await renderEnAsync(hero)).toMatchSnapshot();
   });
 
   test("DeliverAnalytics: the two tiles and the weekly chart", () => {

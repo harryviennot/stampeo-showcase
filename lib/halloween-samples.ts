@@ -19,13 +19,13 @@ const art = (name: string) => `/themes/halloween/${name}`;
 const icon = (name: string) => themedIcon(`halloween-${name}`, art(name), "webp");
 
 export const HALLOWEEN_STAMP_SAMPLES: StampSample[] = [
-  // Pumpkin Night on Les Garçons Barbiers: pumpkin-orange card, a jet-black
+  // Pumpkin Night on Gaspard & Gus: pumpkin-orange card, a jet-black
   // band where orange ghost stamps glow, a gift on the last slot.
   {
     id: "halloween-pumpkin-night",
     design: {
       organization_name: "",
-      logo_url: "/themes/barber/logo.avif",
+      logo_url: "/themes/gaspard-gus/logo.avif",
       background_color: "#FF7A00",
       foreground_color: "#180C04",
       label_color: "#6E2C00",

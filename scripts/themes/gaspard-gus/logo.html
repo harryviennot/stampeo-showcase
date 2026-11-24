@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Playfair+Display:ital,wght@1,700&display=block" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+  svg { display: block; }
+  .name { font-family: "Oswald", sans-serif; font-weight: 700; fill: #000; }
+  .amp { font-family: "Playfair Display", serif; font-style: italic; font-weight: 700; fill: #000; }
+  .tag { font-family: "Oswald", sans-serif; font-weight: 500; letter-spacing: 0.3em; }
+</style>
+</head>
+<body>
+<svg id="logo" xmlns="http://www.w3.org/2000/svg" width="640" height="216" viewBox="0 0 640 216">
+  <defs>
+    <mask id="cut" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="216">
+      <rect width="640" height="216" fill="#fff"/>
+      <text id="tag" class="tag" x="320" y="32" text-anchor="middle" font-size="25" fill="#000">BARBERSHOP</text>
+    </mask>
+  </defs>
+  <!-- pointed ribbon with the word knocked out -->
+  <path id="ribbon" mask="url(#cut)" fill="#000"
+        d="M 150 2 L 490 2 L 520 24 L 490 46 L 150 46 L 120 24 Z"/>
+  <!-- name -->
+  <text id="nameline" x="0" y="156" font-size="100">
+    <tspan class="name">GASPARD </tspan><tspan id="amp" class="amp" font-size="84" dy="-2">&amp;</tspan><tspan class="name" dy="2"> GUS</tspan>
+  </text>
+  <!-- ornament -->
+  <g stroke="#000" stroke-width="3" fill="#000">
+    <line x1="4" y1="192" x2="282" y2="192"/>
+    <line x1="358" y1="192" x2="636" y2="192"/>
+    <path id="star" stroke="none" d="M320 177 L324.4 187.6 L335.8 188.4 L327.1 195.8 L329.8 206.9 L320 200.9 L310.2 206.9 L312.9 195.8 L304.2 188.4 L315.6 187.6 Z"/>
+  </g>
+</svg>
+<script>
+  document.fonts.ready.then(() => {
+    const t = document.getElementById("nameline");
+    const target = 632;
+    let size = 100;
+    for (let i = 0; i < 6; i++) {
+      t.setAttribute("font-size", size);
+      document.getElementById("amp").setAttribute("font-size", size * 0.84);
+      const w = t.getBBox().width;
+      size = size * target / w;
+    }
+    t.setAttribute("font-size", size);
+    document.getElementById("amp").setAttribute("font-size", size * 0.84);
+    const bb = t.getBBox();
+    t.setAttribute("x", (640 - bb.width) / 2 - (bb.x - Number(t.getAttribute("x"))));
+    window.__size = size;
+    document.title = "ready";
+  });
+</script>
+</body>
+</html>

@@ -6,7 +6,7 @@ import type { SectorTheme } from "@/lib/landing/sector-slides";
 // new brands are appended, never inserted. The card fields come from the
 // sector's `fields` in landing.json so they stay localized.
 export const SECTOR_THEMES: SectorTheme[] = [
-  // [0] Les Garçons Barbiers — classic barbershop. Crisp white card, near-black
+  // [0] Gaspard & Gus — classic barbershop. Crisp white card, near-black
   // scissor stamps, a gift on the final reward slot. Framed in warm charcoal
   // and brass so the white card pops.
   {
@@ -22,7 +22,7 @@ export const SECTOR_THEMES: SectorTheme[] = [
     walletIcon: "#FFFFFF",
     walletText: "#343434",
     walletLabel: "#040404",
-    walletLogoUrl: "/themes/barber/logo.avif",
+    walletLogoUrl: "/themes/gaspard-gus/logo.avif",
     walletStamps: 6,
     walletFilled: 6, // reward slot filled → the gift shows
     walletStampIcon: "scissors",

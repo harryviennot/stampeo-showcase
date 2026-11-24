@@ -255,8 +255,7 @@ describe("the level cards (AC20)", () => {
     expect(cards).toContain("LEVEL_UP_BANNER");
   });
 
-  // The barbershop's brand is a real one, so the levels belong to a made-up shop.
-  test("are a made-up dry cleaner's, never the barbershop's: preset stamps, so each level's look changes, and a logo of its own", () => {
+  test("are a made-up dry cleaner's: preset stamps, so each level's look changes, and a logo of its own", () => {
     const { design } = WRENFOLD;
     const logo = join(ROOT, "public", design.logo_url ?? "-");
 
@@ -266,7 +265,6 @@ describe("the level cards (AC20)", () => {
     expect(existsSync(logo)).toBe(true);
     expect(statSync(logo).size).toBeLessThanOrEqual(60_000);
     expect(code(shared("LevelCards"))).toContain("WRENFOLD.design");
-    expect(code(shared("LevelCards"))).not.toMatch(/BARBER|barber/);
   });
 });
 

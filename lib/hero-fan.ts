@@ -17,6 +17,10 @@ import type { CSSProperties } from "react";
 
 import { SECTOR_THEMES } from "@/components/landing-variant/sector-themes";
 import {
+  CHRISTMAS_POINTS_SAMPLES,
+  CHRISTMAS_STAMP_SAMPLES,
+} from "@/lib/seasonal-samples/christmas";
+import {
   HALLOWEEN_POINTS_SAMPLES,
   HALLOWEEN_STAMP_SAMPLES,
 } from "@/lib/halloween-samples";
@@ -224,14 +228,18 @@ const FAN_GEOMETRY: Omit<FanSlot, "cardId">[] = [
   },
 ];
 
-export type FanSeason = "default" | "halloween";
+export type FanSeason = "default" | "halloween" | "christmas";
 
 /** The card in each slot (by index, 0 the apex), per season. The year-round set
  *  is described above. Halloween is the October card themes on sector brands
  *  (lib/halloween-samples.ts): the three a phone keeps mix stamps and points,
  *  the colours alternate along each side so no two purples touch, and the
  *  loudest card, Pumpkin Night's solid orange, sits at the far edge (desktop
- *  only) so it never pulls the eye off the headline. */
+ *  only) so it never pulls the eye off the headline. Christmas is the
+ *  December themes (lib/seasonal-samples/christmas.ts), character themes first: Little
+ *  Santas at the apex with Rudolph (points) and Santa's Elves either side, so
+ *  a phone shows both engines; every brand's logo is light or bright enough to
+ *  read on its card; and Candy Cane's solid red sits at the far edge. */
 export const FAN_CARDS: Record<FanSeason, Record<number, string>> = {
   default: {
     [-3]: "pace",
@@ -251,12 +259,22 @@ export const FAN_CARDS: Record<FanSeason, Record<number, string>> = {
     2: "halloween-blood-moon",
     3: "halloween-trick-or-treat",
   },
+  christmas: {
+    [-3]: "christmas-candy-cane",
+    [-2]: "christmas-north-pole",
+    [-1]: "christmas-rudolph",
+    0: "christmas-little-santas",
+    1: "christmas-santas-elves",
+    2: "christmas-snow-day",
+    3: "christmas-elf-workshop",
+  },
 };
 
-/** Which set the hero shows. The landing page is built statically, so a change
- *  here goes live with the next deploy: set it back to "default" once
- *  Halloween is over. */
-export const HERO_FAN_SEASON: FanSeason = "default";
+/** Which set the homepage hero shows: the Platform fan (laptops), the phone
+ *  stack and the /legacy fan all follow it. The landing page is built
+ *  statically, so a change here goes live with the next deploy: switch it back
+ *  to "default" on 1 January, once Christmas is over. */
+export const HERO_FAN_SEASON: FanSeason = "christmas";
 
 /** The seven places of the arch, filled with `cards` (by index, 0 the apex). */
 function dealCards(cards: Record<number, string>): FanSlot[] {
@@ -270,12 +288,11 @@ export function fanSlots(season: FanSeason): FanSlot[] {
 
 export const FAN_SLOTS: FanSlot[] = fanSlots(HERO_FAN_SEASON);
 
-/** The cards of the Platform homepage's hero,
+/** The year-round cards of the Platform homepage's hero,
  *  dealt into the same seven places. Aurevo, the café those pages follow, is at
  *  the apex with a points card and a stamp card either side, so the middle
  *  three show both engines. Light and dark alternate, no two alike in colour touch, and
- *  the photo stamps (pizza, croissant) sit apart. Never the barbershop sample:
- *  its name and logo belong to a real shop. */
+ *  the photo stamps (pizza, croissant) sit apart. */
 export const PLATFORM_FAN_CARDS: Record<number, string> = {
   [-3]: "gelo",
   [-2]: "rolling-slice",
@@ -286,7 +303,13 @@ export const PLATFORM_FAN_CARDS: Record<number, string> = {
   3: "pace",
 };
 
-export const PLATFORM_FAN_SLOTS: FanSlot[] = dealCards(PLATFORM_FAN_CARDS);
+/** The Platform fan for a season: the year-round cards by default, that
+ *  season's own cards otherwise. */
+export function platformFanSlots(season: FanSeason): FanSlot[] {
+  return dealCards(season === "default" ? PLATFORM_FAN_CARDS : FAN_CARDS[season]);
+}
+
+export const PLATFORM_FAN_SLOTS: FanSlot[] = platformFanSlots(HERO_FAN_SEASON);
 
 /** Every tier's numbers at once; CSS resolves which set is live. Rotation and
  *  position stay unitless so the stylesheet can reuse them in calc() for both
@@ -321,10 +344,14 @@ export type FanCard =
  *  The sample banks come first; a sector brand from the carousel
  *  (sector-themes.ts) is drawn as the carousel draws its wallet card. */
 export function resolveFanCard(cardId: string): FanCard {
-  const stamp = [...STAMP_SAMPLES, ...HALLOWEEN_STAMP_SAMPLES].find((s) => s.id === cardId);
+  const stamp = [...STAMP_SAMPLES, ...HALLOWEEN_STAMP_SAMPLES, ...CHRISTMAS_STAMP_SAMPLES].find(
+    (s) => s.id === cardId,
+  );
   if (stamp) return { kind: "stamps", sample: stamp };
 
-  const points = [...POINTS_SAMPLES, ...HALLOWEEN_POINTS_SAMPLES].find((s) => s.id === cardId);
+  const points = [...POINTS_SAMPLES, ...HALLOWEEN_POINTS_SAMPLES, ...CHRISTMAS_POINTS_SAMPLES].find(
+    (s) => s.id === cardId,
+  );
   if (points) return { kind: "points", sample: points };
 
   const theme = SECTOR_THEMES.find((t) => t.id === cardId);

@@ -37,7 +37,7 @@ describe("the six shops", () => {
 
     expect(new Set(logos).size).toBe(count);
     for (const logo of logos) expect(logo).toMatch(/^\/themes\/[a-z-]+\/logo\./);
-    for (const logo of logos) expect(logo).not.toMatch(/\/themes\/(oba|barber|pulp|gelo|patoune|saltmoss|ode|smash-club|forme|wrenfold|harvest-row|salon|pace)\//);
+    for (const logo of logos) expect(logo).not.toMatch(/\/themes\/(oba|pulp|gelo|patoune|saltmoss|ode|smash-club|forme|wrenfold|harvest-row|salon|pace)\//);
   });
 
   test("run on stamps and on points, so the card's strip changes with the shop and its layout does not", () => {
