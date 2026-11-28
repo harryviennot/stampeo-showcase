@@ -18,7 +18,7 @@
       "hoursMinutes": "Precio fundador: termina en {hours}h {minutes}m"
     },
     "cta": "Empezar",
-    "ctaSubtext": "Prueba gratuita de {trialDays} días · Sin compromiso",
+    "ctaSubtext": "Prueba gratuita de {trialDays} días · Sin tarjeta bancaria",
     "starter": {
       "name": "Starter",
       "tagline": "Para autónomos y comercios de un solo local",
@@ -103,7 +103,7 @@
     "comparisonMonthlyNote": "Precios mostrados al mes. La facturación anual descuenta un 20% en todos los planes.",
     "forLife": "/mes de por vida",
     "cta": "Empezar",
-    "ctaSubtext": "Prueba gratuita de {trialDays} días · Sin compromiso",
+    "ctaSubtext": "Prueba gratuita de {trialDays} días · Sin tarjeta bancaria",
     "starter": {
       "name": "Starter",
       "tagline": "Para autónomos y comercios de un solo local",

@@ -27,7 +27,7 @@ export const SHARED: Shared["SHARED"] = {
   now: "ahora",
   googleCardTitle: "Tarjeta de fidelidad",
   levelNames: { bronze: "Bronce", silver: "Plata", gold: "Oro", platinum: "Platino", noir: "Negro" },
-  reassurance: "{trialDays} días gratis · Sin compromiso",
+  reassurance: "{trialDays} días gratis · Sin tarjeta bancaria",
   demoLink: "Pruébalo en tu teléfono",
   demo: {
     title: "Pruébalo en tu propio teléfono.",

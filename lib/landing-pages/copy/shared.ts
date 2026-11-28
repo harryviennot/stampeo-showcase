@@ -37,7 +37,7 @@ export const SHARED = {
   googleCardTitle: "Loyalty Card",
   /** The five looks a level can take, as the dashboard names them and a card prints them over its count. */
   levelNames: { bronze: "Bronze", silver: "Silver", gold: "Gold", platinum: "Platinum", noir: "Noir" },
-  reassurance: "{trialDays} days free · Cancel anytime",
+  reassurance: "{trialDays} days free · No card required",
   demoLink: "Try it on your phone",
   demo: {
     title: "Try it on your own phone.",

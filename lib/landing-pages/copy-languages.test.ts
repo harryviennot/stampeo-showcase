@@ -10,7 +10,7 @@
 
 import { describe, expect, test } from "bun:test";
 import { availability } from "../plans/plan-facts";
-import { CARD_NEEDED_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
+import { CARD_NEEDED_CLAIM, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
 import { COPIES, copyLines, objectsWith } from "../testing/landing-copy";
 import { landingCopy } from "./copy/bundle";
 
@@ -42,6 +42,13 @@ describe.each(COPIES)("the copy of %s (%s)", (locale, market) => {
 
   test("no line writes the trial length in words, in any language: it is the {trialDays} token", () => {
     expect(offenders(WORDED_TRIAL)).toEqual([]);
+  });
+
+  test("the reassurance under every trial button says the trial length and that no card is required", () => {
+    const { reassurance } = copy.shared.SHARED;
+
+    expect(reassurance).toContain("{trialDays}");
+    expect(reassurance).toMatch(NO_CARD_CLAIM);
   });
 
   test("no line names a plan: Starter, Growth and Pro belong to the pricing block", () => {

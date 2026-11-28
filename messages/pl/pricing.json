@@ -18,7 +18,7 @@
       "hoursMinutes": "Cena założycielska: koniec za {hours} godz. {minutes} min"
     },
     "cta": "Zaczynamy",
-    "ctaSubtext": "{trialDays} dni za darmo · Rezygnujesz kiedy chcesz",
+    "ctaSubtext": "{trialDays} dni za darmo · Bez karty płatniczej",
     "starter": {
       "name": "Starter",
       "tagline": "Dla jednoosobowych firm i pojedynczych lokali",
@@ -103,7 +103,7 @@
     "comparisonMonthlyNote": "Ceny podane za miesiąc. Płatność roczna zdejmuje 20% z każdego planu.",
     "forLife": "/mies. na zawsze",
     "cta": "Zaczynamy",
-    "ctaSubtext": "{trialDays} dni za darmo · Rezygnujesz kiedy chcesz",
+    "ctaSubtext": "{trialDays} dni za darmo · Bez karty płatniczej",
     "starter": {
       "name": "Starter",
       "tagline": "Dla jednoosobowych firm i pojedynczych lokali",

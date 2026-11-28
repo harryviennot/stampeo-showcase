@@ -456,7 +456,7 @@
       "subtitle": "Build your card today. {trialDays} days to test it. {zero} to start.",
       "primaryCta": "Create my card",
       "secondaryCta": "Book a demo",
-      "reassurance": "{trialDays} days free · No commitment"
+      "reassurance": "{trialDays} days free · No card required"
     },
     "changelog": {
       "whatsNew": "See what is new in Stampeo"
@@ -466,7 +466,7 @@
         "title": "Turn first‑time customers into <accent>regulars.</accent>",
         "subtitle": "Stamps for repeat visits, points for what they spend. Your card lives in Apple Wallet and Google Wallet, so there's no app for your customers to download and no new POS to learn.",
         "primaryCta": "Start my free trial",
-        "reassurance": "{trialDays} days free · Cancel anytime"
+        "reassurance": "{trialDays} days free · No card required"
       },
       "differentiator": {
         "title": "Why businesses choose our digital punch card.",
@@ -492,7 +492,7 @@
       },
       "finalCta": {
         "primaryCta": "Start my free trial",
-        "reassurance": "{trialDays} days free · Cancel anytime"
+        "reassurance": "{trialDays} days free · No card required"
       },
       "faq": {
         "items": [

@@ -25,7 +25,7 @@ export const SHARED: LandingCopy["shared"]["SHARED"] = {
   now: "teraz",
   googleCardTitle: "Karta lojalnościowa",
   levelNames: { bronze: "Brąz", silver: "Srebro", gold: "Złoto", platinum: "Platyna", noir: "Czerń" },
-  reassurance: "{trialDays} dni za darmo · Rezygnujesz kiedy chcesz",
+  reassurance: "{trialDays} dni za darmo · Bez karty płatniczej",
   demoLink: "Wypróbuj na swoim telefonie",
   demo: {
     title: "Wypróbuj na własnym telefonie.",

@@ -682,4 +682,29 @@ describe('the site never says a card is needed to start the trial', () => {
   test.each(['variant.us.faq.items[0].answer', 'variant.us.faq.items[3].answer'])('en/landing.json "%s" says no card is required', (key) => {
     expect(load('en', 'landing.json')[key]).toMatch(NO_CARD_CLAIM);
   });
+
+  /** The short lines under a trial button, read at a glance: each says the trial length and that no card is required. */
+  const REASSURANCE_LINES = [
+    ['landing.json', 'variant.finalCta.reassurance'],
+    ['pricing.json', 'pricing.ctaSubtext'],
+    ['pricing.json', 'pricingPage.ctaSubtext'],
+  ] as const;
+
+  test.each(LOCALES.flatMap((locale) => REASSURANCE_LINES.map(([namespace, key]) => [locale, namespace, key] as const)))(
+    '%s/%s "%s" says the trial length and that no card is required',
+    (locale, namespace, key) => {
+      const line = load(locale, namespace)[key];
+      expect(line).toContain('{trialDays}');
+      expect(line).toMatch(NO_CARD_CLAIM);
+    },
+  );
+
+  test.each(['variant.us.hero.reassurance', 'variant.us.finalCta.reassurance'])(
+    'en/landing.json "%s" says the trial length and that no card is required',
+    (key) => {
+      const line = load('en', 'landing.json')[key];
+      expect(line).toContain('{trialDays}');
+      expect(line).toMatch(NO_CARD_CLAIM);
+    },
+  );
 });

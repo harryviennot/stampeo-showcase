@@ -21,6 +21,7 @@ import { BUSINESS_TYPE_ICONS, TypeMarquee } from "@/components/landing-pages/pla
 import { getAllPosts } from "../blog";
 import { ROOT, code, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
 import { COMPONENTS_DIR, pageFile } from "../testing/landing-pages-source";
+import { NO_CARD_CLAIM } from "../testing/copy-claims";
 import { trackedBy } from "../testing/cta-recorder";
 import { expectInOrder, renderEn, renderEnAsync, renderIn, textOf } from "../testing/render-en";
 import { mockEnglishServerTranslations } from "../testing/server-intl";
@@ -477,6 +478,7 @@ describe("the trial offered again after the two middle sections (AC7)", () => {
     const text = textOf(renderIn(locale, <LpTrialCta location="platform_apps" />, { market: "int" }));
 
     expect(text).toContain(cta);
+    expect(reassurance).toMatch(NO_CARD_CLAIM);
     expect(text.indexOf(cta)).toBeLessThan(text.indexOf(reassurance.replace("{trialDays}", "14")));
   });
 });

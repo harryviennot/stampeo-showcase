@@ -456,7 +456,7 @@
       "subtitle": "Crea tu tarjeta hoy. {trialDays} días para probarla. {zero} para empezar.",
       "primaryCta": "Crear mi tarjeta",
       "secondaryCta": "Reservar una demo",
-      "reassurance": "{trialDays} días gratis · Sin compromiso"
+      "reassurance": "{trialDays} días gratis · Sin tarjeta bancaria"
     },
     "changelog": {
       "whatsNew": "Mira las novedades de Stampeo"
