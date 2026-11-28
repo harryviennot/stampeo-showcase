@@ -1,6 +1,9 @@
 import { describe, expect, it } from "bun:test";
+import { renderToStaticMarkup } from "react-dom/server";
 import { routing } from "@/i18n/routing";
 import { MARKETS } from "../markets";
+import { getLegalContent } from "./index";
+import { compileLegalMDX } from "./mdx";
 import { termsSection } from "./policy-test-utils";
 
 /**
@@ -109,5 +112,14 @@ describe.each(routing.locales)("Terms §5.1 free trial (%s)", (locale) => {
 describe.each(routing.locales)("Terms §12 right of withdrawal (%s)", (locale) => {
   it("does not say a card is requested at signup for the trial", () => {
     expect(s12(locale)).not.toMatch(WORDING[locale].cardAtSignup);
+  });
+});
+
+describe("the terms page", () => {
+  it.each(routing.locales)("compiles as MDX and renders (%s)", async (locale) => {
+    const legal = getLegalContent("terms", locale)!;
+    const html = renderToStaticMarkup(await compileLegalMDX(legal.content));
+
+    expect(html).toContain("<h3");
   });
 });
