@@ -93,6 +93,16 @@ describe("cookieDomainForHost", () => {
   });
 });
 
+describe("the free trial", () => {
+  test("every market grants the same 14 days: the length the backend starts a trial with", () => {
+    expect(Object.fromEntries(Object.entries(MARKETS).map(([market, config]) => [market, config.trialDays]))).toEqual({
+      int: 14,
+      uk: 14,
+      us: 14,
+    });
+  });
+});
+
 describe("MARKET_COOKIE", () => {
   test("is not the locale cookie", () => {
     // Locale, market and billing currency are three axes the codebase keeps

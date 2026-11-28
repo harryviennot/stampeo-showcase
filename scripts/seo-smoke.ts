@@ -12,7 +12,7 @@
  */
 
 import { buildSeoLinks } from "../lib/seo-links";
-import type { Market } from "../lib/markets";
+import { MARKETS, type Market } from "../lib/markets";
 import {
   alternateProblems,
   articleImageUrls,
@@ -184,17 +184,17 @@ export function buildChecks(baseUrl: string): Check[] {
 
     { name: "Prices / (€)", run: onPage("/", (html) => priceProblems(html, { currency: "€" })) },
     {
-      name: "Prices /pricing (€, 30-day trial)",
-      run: onPage("/pricing", (html) => priceProblems(html, { currency: "€", trialDays: 30 })),
+      name: `Prices /pricing (€, ${MARKETS.int.trialDays}-day trial)`,
+      run: onPage("/pricing", (html) => priceProblems(html, { currency: "€", trialDays: MARKETS.int.trialDays })),
     },
     {
-      name: "Prices /en/pricing (€, 30-day trial)",
-      run: onPage("/en/pricing", (html) => priceProblems(html, { currency: "€", trialDays: 30 })),
+      name: `Prices /en/pricing (€, ${MARKETS.int.trialDays}-day trial)`,
+      run: onPage("/en/pricing", (html) => priceProblems(html, { currency: "€", trialDays: MARKETS.int.trialDays })),
     },
     { name: "Prices /us/pricing ($)", run: onPage("/us/pricing", (html) => priceProblems(html, { currency: "$" })) },
     {
-      name: "Prices /us ($, 14-day trial)",
-      run: onPage("/us", (html) => priceProblems(html, { currency: "$", trialDays: 14 })),
+      name: `Prices /us ($, ${MARKETS.us.trialDays}-day trial)`,
+      run: onPage("/us", (html) => priceProblems(html, { currency: "$", trialDays: MARKETS.us.trialDays })),
     },
     {
       name: "/us links to /us/pricing, never /en/us/pricing",

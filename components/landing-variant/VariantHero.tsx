@@ -20,11 +20,8 @@ export async function VariantHero({
   const locale = await getLocale();
   const badges = walletBadges(locale);
 
-  // The trial is the strongest thing we can say above the fold, and it was not
-  // said at all: the hero never mentioned it, so the number only appeared four
-  // screens down. It is market-scoped rather than global because the honest
-  // reassurance differs by country, and because 30 days is not a differentiator
-  // in a market where the trial is table stakes.
+  // The trial reassurance above the fold is market-scoped: only a market whose
+  // copy carries a `hero.reassurance` line shows one.
   const hasReassurance = copy.has("hero.reassurance");
 
   // Hoisted, and the wrapper below is conditional, so a market WITHOUT a

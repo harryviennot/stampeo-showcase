@@ -18,7 +18,7 @@
       "hoursMinutes": "Founding pricing closes in {hours}h {minutes}m"
     },
     "cta": "Get started",
-    "ctaSubtext": "{trialDays}-day free trial · Cancel anytime",
+    "ctaSubtext": "{trialDays}-day free trial · No card required",
     "starter": {
       "name": "Starter",
       "tagline": "For solo operators and single-location businesses",
@@ -103,7 +103,7 @@
     "comparisonMonthlyNote": "Prices shown monthly. Yearly billing takes 20% off every plan.",
     "forLife": "/mo for life",
     "cta": "Get started",
-    "ctaSubtext": "{trialDays}-day free trial · Cancel anytime",
+    "ctaSubtext": "{trialDays}-day free trial · No card required",
     "starter": {
       "name": "Starter",
       "tagline": "For solo operators and single-location businesses",
@@ -276,7 +276,7 @@
       "items": [
         {
           "question": "Is there a free trial?",
-          "answer": "Yes! Every plan includes a {trialDays}-day free trial. We ask for a card to start the trial, but you're not charged until they are up. Cancel anytime."
+          "answer": "Yes! Every plan includes a {trialDays}-day free trial, and no card is required to start. After the trial, choose a plan and add your payment card to keep going. Cancel anytime."
         },
         {
           "question": "Can I switch plans later?",

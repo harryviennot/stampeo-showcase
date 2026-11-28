@@ -421,7 +421,7 @@
       "items": [
         {
           "question": "Combien ça coûte ?",
-          "answer": "Le plan Starter est à {starterPrice}/mois. Pas de frais de mise en service, pas d'engagement. Vous commencez par {trialDays} jours gratuits. Nous demandons votre carte pour démarrer l'essai, sans prélèvement avant la fin de cette période."
+          "answer": "Le plan Starter est à {starterPrice}/mois. Pas de frais de mise en service, pas d'engagement. Vous commencez par {trialDays} jours gratuits, sans carte bancaire. Ensuite, vous choisissez un plan et ajoutez votre carte bancaire pour continuer."
         },
         {
           "question": "Dois-je changer ma caisse ?",
@@ -433,7 +433,7 @@
         },
         {
           "question": "Que se passe-t-il à la fin de l'essai gratuit ?",
-          "answer": "Vous choisissez de continuer ou non. Votre carte bancaire est demandée pour démarrer l'essai, mais aucun débit n'a lieu avant la fin des {trialDays} jours. Vous pouvez résilier à tout moment avant cette date."
+          "answer": "Vous choisissez de continuer ou non. Aucune carte bancaire n'est demandée pour démarrer et rien n'est débité pendant l'essai. Au bout de {trialDays} jours, choisissez un plan et ajoutez votre carte bancaire pour continuer. Sans plan, votre compte est mis en pause et vos clients gardent la carte qu'ils ont déjà sur leur téléphone."
         },
         {
           "question": "Mes données sont-elles en sécurité ?",
@@ -457,7 +457,7 @@
       "subtitle": "Créez votre carte aujourd'hui. {trialDays} jours pour la tester. {zero} pour commencer.",
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
-      "reassurance": "{trialDays} jours gratuits · Sans engagement · Une question ? 06 49 37 04 70"
+      "reassurance": "{trialDays} jours gratuits · Sans carte bancaire · Une question ? 06 49 37 04 70"
     },
     "changelog": {
       "whatsNew": "Voir les nouveautés de Stampeo"

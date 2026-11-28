@@ -477,6 +477,6 @@ describe("the trial offered again after the two middle sections (AC7)", () => {
     const text = textOf(renderIn(locale, <LpTrialCta location="platform_apps" />, { market: "int" }));
 
     expect(text).toContain(cta);
-    expect(text.indexOf(cta)).toBeLessThan(text.indexOf(reassurance.replace("{trialDays}", "30")));
+    expect(text.indexOf(cta)).toBeLessThan(text.indexOf(reassurance.replace("{trialDays}", "14")));
   });
 });

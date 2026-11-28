@@ -51,9 +51,11 @@ Stampeo provides businesses with a platform to:
 
 New accounts may be granted a **free trial** with no commitment. Its duration is shown at signup, in the Stripe checkout and in the dashboard, and may differ by market or offer. The trial provides access to all features of the selected tier.
 
-A payment card is requested at signup in order to start the trial. No amount is charged before the trial ends: at the end of the trial, the Subscription starts automatically at the price of the selected tier and cadence, unless it has been cancelled beforehand from the dashboard.
+The standard free trial lasts **14 days**, and **no payment method is required to start it**. At any time during the trial, the Business User may choose a plan and add a payment card from the dashboard. Adding a card does not end the trial early, and no amount is charged before the trial ends. Where a card has been added, the Subscription starts automatically at the end of the trial, at the price of the selected tier and cadence, unless it has been cancelled beforehand from the dashboard.
 
-Where an account has no payment method on file, the Business User has a **3-day grace period** after trial expiry during which the dashboard remains fully functional, allowing subscription without service interruption. After the grace period, if no subscription has been set up, access switches to **read-only mode**: write operations (customer creation, stamp addition, design changes) are blocked, but data remains accessible and is preserved. Passes already installed in customer wallets remain present but are no longer updated.
+If, at the end of the trial, the Business User has not chosen a plan and added a payment method, the trial ends and the service is paused: the dashboard, stamp addition, reward redemption and new customer sign-ups are unavailable until a Subscription is started. No grace period applies after a free trial. Data is preserved. Passes already installed in customer wallets remain present but are no longer updated.
+
+A **3-day grace period** applies only where a payment due under a paid Subscription fails, including the first payment at the end of a trial for which a card was added. During the grace period the dashboard remains fully functional, allowing the payment method to be updated without service interruption. After the grace period, if payment has not been made, access switches to **read-only mode**: write operations (customer creation, stamp addition, design changes) are blocked, but data remains accessible and is preserved. Passes already installed in customer wallets remain present but are no longer updated.
 
 Subscribing later instantly restores full access.
 
@@ -315,7 +317,7 @@ In accordance with Article L221-28 of the French Consumer Code, the right of wit
 
 By subscribing and beginning to use the Platform, the Business User acknowledges and accepts the loss of their right of withdrawal.
 
-However, the free trial allows the service to be tested with no charge and no commitment: the card requested at signup is not debited before the end of the trial, and the Subscription may be cancelled at any time before that date.
+However, the free trial allows the service to be tested with no charge and no commitment: no payment method is required to start it, any card added during the trial is not debited before the end of the trial, and the Subscription may be cancelled at any time before that date.
 
 ## 13. Governing Law and Disputes
 

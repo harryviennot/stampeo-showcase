@@ -553,7 +553,7 @@
       ],
       "cta": {
         "title": "Chaque client informé, automatiquement",
-        "subtitle": "Les notifications transactionnelles sont incluses dans tous les plans. Commencez votre mois gratuit et récompensez chaque visite dès le premier jour."
+        "subtitle": "Les notifications transactionnelles sont incluses dans tous les plans. Commencez votre essai gratuit et récompensez chaque visite dès le premier jour."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -802,7 +802,7 @@
       ],
       "cta": {
         "title": "Soyez présent au bon moment",
-        "subtitle": "La géolocalisation arrive bientôt sur le plan Pro. Commencez votre mois gratuit dès maintenant, votre carte sera prête à son lancement."
+        "subtitle": "La géolocalisation arrive bientôt sur le plan Pro. Commencez votre essai gratuit dès maintenant, votre carte sera prête à son lancement."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1053,7 +1053,7 @@
       },
       "cta": {
         "title": "Votre prochaine campagne, dans la poche de vos clients",
-        "subtitle": "Commencez votre mois gratuit et envoyez votre première diffusion cette semaine."
+        "subtitle": "Commencez votre essai gratuit et envoyez votre première diffusion cette semaine."
       },
       "related": [
         "notifications-push",

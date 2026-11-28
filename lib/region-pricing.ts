@@ -34,15 +34,15 @@ const TRIAL_DAYS_BY_COUNTRY: Record<string, number> = {
 };
 
 const DEFAULT_CURRENCY: RegionCurrency = "eur";
-const TRIAL_DAYS_STANDARD = 30;
+const TRIAL_DAYS_STANDARD = 14;
 
 /**
  * The billing terms a visitor detected in `country` should be shown.
  *
  * Returns null when the country is unknown or malformed, and the caller falls
- * back to the page's market default. Junk must not degrade to "eur/30": the
+ * back to the page's market default. Junk must not degrade to euros: the
  * page default may itself be usd (/us), and a bad detection is not evidence
- * the visitor is European. Note GB is eur/30 on purpose — /uk bills in euros.
+ * the visitor is European. GB is eur on purpose: /uk bills in euros.
  */
 export function regionBilling(
   country: string | null | undefined,

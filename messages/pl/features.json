@@ -778,7 +778,7 @@
       ],
       "cta": {
         "title": "Każdy klient na bieżąco, automatycznie",
-        "subtitle": "Automatyczne powiadomienia są w każdym planie. Zacznij darmowy miesiąc i nagradzaj wizyty od pierwszego dnia."
+        "subtitle": "Automatyczne powiadomienia są w każdym planie. Zacznij darmowy okres próbny i nagradzaj wizyty od pierwszego dnia."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1027,7 +1027,7 @@
       ],
       "cta": {
         "title": "Bądź na miejscu w dobrym momencie",
-        "subtitle": "Geolokalizacja pojawi się wkrótce w planie Pro. Zacznij darmowy miesiąc już teraz, a karta będzie gotowa na start."
+        "subtitle": "Geolokalizacja pojawi się wkrótce w planie Pro. Zacznij darmowy okres próbny już teraz, a karta będzie gotowa na start."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1278,7 +1278,7 @@
       },
       "cta": {
         "title": "Twoja następna promocja, w kieszeni klientów",
-        "subtitle": "Zacznij darmowy miesiąc i wyślij pierwszą rozsyłkę jeszcze w tym tygodniu."
+        "subtitle": "Zacznij darmowy okres próbny i wyślij pierwszą rozsyłkę jeszcze w tym tygodniu."
       },
       "related": [
         "notifications-push",

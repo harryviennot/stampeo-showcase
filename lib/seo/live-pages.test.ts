@@ -124,8 +124,8 @@ describe("the homepage renders Platform, in the visitor's language and market", 
 
   test.each([
     ["us", "usd", 14],
-    ["int", "eur", 30],
-    ["uk", "eur", 30],
+    ["int", "eur", 14],
+    ["uk", "eur", 14],
   ] as const)("the %s shell opens on %s and a %s-day trial, with the market's header and footer", async (market, currency, trialDays) => {
     current = "en";
     const shell = await LandingPageShell({ slug: "platform", market, children: null });

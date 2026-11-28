@@ -11,6 +11,7 @@ import { BENCHMARK, sourceLine } from "./plans/benchmark";
 import { MARKETS } from "./markets";
 import { TIERS, planSummary } from "./plans/plan-facts";
 import { FALLBACK_PRICING, FOUNDING_PRICING, type Pricing } from "./pricing";
+import { CARD_NEEDED_CLAIM, NO_CARD_CLAIM } from "./testing/copy-claims";
 
 /**
  * These are rot guards, not snapshot tests. `public/llms.txt` used to be
@@ -168,6 +169,14 @@ describe("llms.txt facts", () => {
     expect(us).toContain(`${MARKETS.us.trialDays}-day free trial`);
     expect(us).toContain("https://stampeo.app/us)");
     expect(us).toContain("https://stampeo.app/us/pricing");
+  });
+
+  it("says the trial needs no card in each pricing block and in the FAQ, and never that a card is needed to start", () => {
+    const trialLines = body.split("\n").filter((line) => /-day free trial on every plan|\*\*Is there a free trial\?\*\*/.test(line));
+
+    expect(trialLines).toHaveLength(3);
+    for (const line of trialLines) expect(line).toMatch(NO_CARD_CLAIM);
+    expect(body).not.toMatch(CARD_NEEDED_CLAIM);
   });
 
   it("falls back to the baked ladder when no catalog is passed", () => {

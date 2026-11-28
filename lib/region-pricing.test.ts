@@ -38,14 +38,14 @@ describe("regionBilling", () => {
     expect(regionBilling(" us ")).toEqual({ currency: "usd", trialDays: 14 });
   });
 
-  test("every other detected country is eur/30", () => {
+  test("every other detected country is eur with the same 14-day trial", () => {
     for (const country of ["FR", "PL", "ES", "DE", "JP", "CA", "AU"]) {
-      expect(regionBilling(country)).toEqual({ currency: "eur", trialDays: 30 });
+      expect(regionBilling(country)).toEqual({ currency: "eur", trialDays: 14 });
     }
   });
 
-  test("GB is eur/30 — /uk deliberately bills in euros, no GBP ladder exists", () => {
-    expect(regionBilling("GB")).toEqual({ currency: "eur", trialDays: 30 });
+  test("GB is eur with the 14-day trial — /uk deliberately bills in euros, no GBP ladder exists", () => {
+    expect(regionBilling("GB")).toEqual({ currency: "eur", trialDays: 14 });
   });
 
   test("undetectable or junk input resolves to null so the caller falls back to the page market", () => {
@@ -73,8 +73,8 @@ describe("displayTerms: the ladder and trial a price surface shows", () => {
 
   test.each([
     ["us", "usd", 14],
-    ["int", "eur", 30],
-    ["uk", "eur", 30],
+    ["int", "eur", 14],
+    ["uk", "eur", 14],
   ] as const)("the server renders the %s page in %s with a %d-day trial", (market, currency, days) => {
     const terms = displayTerms(ladders, pageTerms(market), null);
     expect(terms.pricing).toBe(ladders[currency]);
@@ -84,8 +84,8 @@ describe("displayTerms: the ladder and trial a price surface shows", () => {
   test.each([
     ["a US visitor on /en", "int", "US", "usd", 14],
     ["a US visitor on /uk", "uk", "US", "usd", 14],
-    ["a French visitor on /us", "us", "FR", "eur", 30],
-    ["a British visitor on /us", "us", "GB", "eur", 30],
+    ["a French visitor on /us", "us", "FR", "eur", 14],
+    ["a British visitor on /us", "us", "GB", "eur", 14],
   ] as const)("after hydration, %s gets their region's terms", (_, market, country, currency, days) => {
     const terms = displayTerms(ladders, pageTerms(market), country);
     expect(terms.pricing).toBe(ladders[currency]);
@@ -161,7 +161,7 @@ describe("FAQ catalog strings interpolate clean", () => {
       expect(items.length).toBeGreaterThan(0);
       for (const ladder of [FALLBACK_PRICING.eur, FALLBACK_PRICING.usd]) {
         for (const item of items) {
-          const out = interpolatePricing(item.answer, ladder, "en", 30);
+          const out = interpolatePricing(item.answer, ladder, "en", 14);
           expect(out).not.toContain("{");
           expect(out).not.toContain("}");
         }

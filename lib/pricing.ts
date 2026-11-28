@@ -283,8 +283,7 @@ export function interpolatePricing(
     .replaceAll("{zero}", money(0))
     .replaceAll("{yearlyDiscount}", String(FOUNDING_PRICING.yearlyDiscountPercent))
     .replaceAll("{freeMonths}", String(FOUNDING_PRICING.freeMonths))
-    // The trial length is a PROMISE, and it differs by market: the US gets 14
-    // days where everywhere else gets 30. Hardcoding it in copy is how /us came
-    // to offer 30 days one click before Stripe granted 14.
+    // The trial length is a PROMISE read from `MARKETS`, never typed into copy,
+    // so it follows whatever the backend grants each market.
     .replaceAll("{trialDays}", String(trialDays ?? MARKETS.int.trialDays));
 }

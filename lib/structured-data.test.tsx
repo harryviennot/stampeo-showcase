@@ -9,6 +9,7 @@ import { FALLBACK_PRICING, type Pricing } from "./pricing";
 import { MARKETS } from "./markets";
 import { planSummary } from "./plans/plan-facts";
 import { loadCatalog } from "./testing/catalogs";
+import { CARD_NEEDED_CLAIM, NO_CARD_CLAIM } from "./testing/copy-claims";
 import {
   articleJsonLd,
   organizationJsonLd,
@@ -145,6 +146,14 @@ describe("pricing page FAQ", () => {
     expect(text).not.toMatch(/\{\w+\}/);
     expect(text).toContain(`${MARKETS[market].trialDays}-day free trial`);
     expect(text).toContain(currency === "usd" ? "$29" : "€20");
+  });
+
+  it.each(["int", "us"] as const)("the %s FAQ that search engines read says the trial needs no card", (market) => {
+    const currency = market === "us" ? "usd" : "eur";
+    const text = JSON.stringify(pricingFaqJsonLd(items, livePricing(currency), "en", MARKETS[market].trialDays));
+
+    expect(text).toMatch(NO_CARD_CLAIM);
+    expect(text).not.toMatch(CARD_NEEDED_CLAIM);
   });
 
   it.each(["fr", "en", "es", "pl"])("the %s FAQ does not advertise the closed founding programme", (locale) => {

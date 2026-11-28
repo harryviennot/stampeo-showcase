@@ -420,7 +420,7 @@
       "items": [
         {
           "question": "How much does it cost?",
-          "answer": "The Starter plan is {starterPrice}/month. No setup fee, no commitment. You start with {trialDays} days free. We ask for your card to begin the trial, with no charge before they are up."
+          "answer": "The Starter plan is {starterPrice}/month. No setup fee, no commitment. You start with {trialDays} days free, no card required. After the trial, choose a plan and add your payment card to keep going."
         },
         {
           "question": "Do I need to change my till?",
@@ -432,7 +432,7 @@
         },
         {
           "question": "What happens when the free trial ends?",
-          "answer": "You choose whether to continue. We ask for your card to start the trial, but nothing is charged before the {trialDays} days are up. You can cancel any time before then."
+          "answer": "You choose whether to continue. No card is needed to start, and nothing is charged during the trial. After {trialDays} days, choose a plan and add your payment card to keep going. Without a plan, your account is paused and your customers keep the cards already in their wallets."
         },
         {
           "question": "Is my data safe?",
@@ -456,7 +456,7 @@
       "subtitle": "Build your card today. {trialDays} days to test it. {zero} to start.",
       "primaryCta": "Create my card",
       "secondaryCta": "Book a demo",
-      "reassurance": "{trialDays} days free · No commitment"
+      "reassurance": "{trialDays} days free · No card required"
     },
     "changelog": {
       "whatsNew": "See what is new in Stampeo"
@@ -466,7 +466,7 @@
         "title": "Turn first‑time customers into <accent>regulars.</accent>",
         "subtitle": "Stamps for repeat visits, points for what they spend. Your card lives in Apple Wallet and Google Wallet, so there's no app for your customers to download and no new POS to learn.",
         "primaryCta": "Start my free trial",
-        "reassurance": "{trialDays} days free · Cancel anytime"
+        "reassurance": "{trialDays} days free · No card required"
       },
       "differentiator": {
         "title": "Why businesses choose our digital punch card.",
@@ -492,13 +492,13 @@
       },
       "finalCta": {
         "primaryCta": "Start my free trial",
-        "reassurance": "{trialDays} days free · Cancel anytime"
+        "reassurance": "{trialDays} days free · No card required"
       },
       "faq": {
         "items": [
           {
             "question": "How much does it cost?",
-            "answer": "The Starter plan is {starterPrice}/month. No setup fee and no contract. You start with {trialDays} days free. We ask for your card to start the trial, and nothing is charged before the {trialDays} days are up."
+            "answer": "The Starter plan is {starterPrice}/month. No setup fee and no contract. You start with {trialDays} days free, no card required. After the trial, choose a plan and add your payment card to keep going."
           },
           {
             "question": "Do I need to switch my POS?",
@@ -510,7 +510,7 @@
           },
           {
             "question": "What happens when the free trial ends?",
-            "answer": "You choose whether to continue. We ask for your card to start the trial, but nothing is charged before the {trialDays} days are up, and you can cancel anytime before then."
+            "answer": "You choose whether to continue. No card is needed to start, and nothing is charged during the trial. After {trialDays} days, choose a plan and add your payment card to keep going. Cancel anytime. Without a plan, your account is paused and your customers keep the cards already in their wallets."
           },
           {
             "question": "Is there a contract?",

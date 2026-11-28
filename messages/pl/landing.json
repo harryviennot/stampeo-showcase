@@ -420,7 +420,7 @@
       "items": [
         {
           "question": "Ile to kosztuje?",
-          "answer": "Plan Starter kosztuje {starterPrice}/miesiąc. Bez opłaty wstępnej, bez zobowiązań. Zaczynasz od {trialDays} dni za darmo. Prosimy o kartę, żeby rozpocząć okres próbny, ale nic nie pobieramy przed końcem miesiąca."
+          "answer": "Plan Starter kosztuje {starterPrice}/miesiąc. Bez opłaty wstępnej, bez zobowiązań. Zaczynasz od {trialDays} dni za darmo, bez karty płatniczej. Potem wybierasz plan i dodajesz kartę płatniczą, żeby korzystać dalej."
         },
         {
           "question": "Czy muszę zmieniać kasę?",
@@ -432,7 +432,7 @@
         },
         {
           "question": "Co się dzieje po zakończeniu okresu próbnego?",
-          "answer": "Decydujesz, czy zostajesz. Prosimy o kartę płatniczą na start okresu próbnego, ale przed upływem {trialDays} dni nie pobieramy nic. Możesz zrezygnować w każdej chwili przed tą datą."
+          "answer": "Decydujesz, czy zostajesz. Okres próbny zaczyna się bez karty płatniczej, a w jego trakcie nic nie jest pobierane. Po upływie {trialDays} dni wybierasz plan i dodajesz kartę płatniczą, żeby korzystać dalej. Bez planu konto zostaje wstrzymane, a twoi klienci zachowują karty, które mają już w telefonie."
         },
         {
           "question": "Czy moje dane są bezpieczne?",
@@ -456,7 +456,7 @@
       "subtitle": "Stwórz kartę jeszcze dziś. {trialDays} dni na testy. {zero} na start.",
       "primaryCta": "Stwórz moją kartę",
       "secondaryCta": "Umów demo",
-      "reassurance": "{trialDays} dni za darmo · Bez zobowiązań"
+      "reassurance": "{trialDays} dni za darmo · Bez karty płatniczej"
     },
     "changelog": {
       "whatsNew": "Zobacz nowości w Stampeo"

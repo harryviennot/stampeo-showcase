@@ -22,7 +22,7 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse, TYPE } from '@formatjs/icu-messageformat-parser';
 import { routing } from '../i18n/routing';
-import { NO_CARD_CLAIM, WORDED_TRIAL } from './testing/copy-claims';
+import { CARD_NEEDED_CLAIM, NO_CARD_CLAIM, WORDED_TRIAL } from './testing/copy-claims';
 
 const LOCALES = routing.locales;
 const MESSAGES_DIR = join(import.meta.dir, '..', 'messages');
@@ -430,9 +430,7 @@ describe('market-scoped copy', () => {
    * it may only grow with a reason written down.
    */
   const MARKET_ONLY_KEYS: ReadonlySet<string> = new Set([
-    // The hero reassurance line. /en deliberately has no equivalent: 30 days is
-    // table stakes in Europe and saying it above the fold buys nothing, whereas
-    // in the US the trial is the strongest thing we can say there. Gated by
+    // The hero reassurance line: only the /us hero carries one. Gated by
     // `copy.has("hero.reassurance")` in VariantHero.
     'landing.json::variant.us.hero.reassurance',
     // The /us and /us/pricing title and description. The international pages
@@ -613,15 +611,15 @@ describe('market-scoped copy', () => {
 
 // ───────────────────────── trial-length claims ─────────────────────────
 
-describe('English copy never writes a trial length in words', () => {
-  test.each(NAMESPACES)('%s', (namespace) => {
+describe('no language writes a trial length in words', () => {
+  test.each(LOCALES.flatMap((locale) => NAMESPACES.map((namespace) => [locale, namespace] as const)))('%s/%s', (locale, namespace) => {
     const offenders: string[] = [];
-    for (const [key, value] of Object.entries(load(SOURCE_LOCALE, namespace))) {
+    for (const [key, value] of Object.entries(load(locale, namespace))) {
       if (!WORDED_TRIAL.test(value)) continue;
       offenders.push(
-        `messages/en/${namespace} "${key}" states a trial length in words, ` +
-          `which cannot follow the market (/us gets 14 days, not 30). ` +
-          `Use the {trialDays} placeholder: ${value.slice(0, 80)}`,
+        `messages/${locale}/${namespace} "${key}" states a trial length in words, ` +
+          `which cannot follow the market (every market reads MARKETS[].trialDays). ` +
+          `Use the {trialDays} placeholder or say "free trial": ${value.slice(0, 80)}`,
       );
     }
     expect(offenders).toEqual([]);
@@ -631,6 +629,8 @@ describe('English copy never writes a trial length in words', () => {
     // Otherwise the fix for the above would trip it too.
     expect(WORDED_TRIAL.test('{trialDays} days free · Cancel anytime')).toBe(false);
     expect(WORDED_TRIAL.test('Start your free trial')).toBe(false);
+    expect(WORDED_TRIAL.test('{trialDays} jours gratuits · Sans engagement')).toBe(false);
+    expect(WORDED_TRIAL.test('Zacznij darmowy okres próbny')).toBe(false);
   });
 
   test('the guard catches every shape that shipped', () => {
@@ -640,52 +640,70 @@ describe('English copy never writes a trial length in words', () => {
       "You're eligible for 30 days free!",
       '30 days free with 8 stamps!',
       '1 month free, no catch',
+      'Commencez votre mois gratuit et envoyez votre première diffusion cette semaine.',
+      'Un mois gratuit, sans engagement.',
+      'Empieza tu mes gratis y recompensa cada visita desde el primer día.',
+      'Zacznij darmowy miesiąc i nagradzaj wizyty od pierwszego dnia.',
     ]) {
       expect(WORDED_TRIAL.test(shipped)).toBe(true);
     }
   });
 });
 
-describe('the site never promises a trial without a card', () => {
+describe('the site never says a card is needed to start the trial', () => {
   test.each(LOCALES)('%s', (locale) => {
     const offenders: string[] = [];
     for (const namespace of NAMESPACES) {
       for (const [key, value] of Object.entries(load(locale, namespace))) {
-        if (!NO_CARD_CLAIM.test(value)) continue;
+        if (!CARD_NEEDED_CLAIM.test(value)) continue;
         offenders.push(
-          `messages/${locale}/${namespace} "${key}" promises a trial with no ` +
-            `card, which requires_card_upfront makes false: ${value.slice(0, 80)}`,
+          `messages/${locale}/${namespace} "${key}" makes a card a condition of ` +
+            `starting the trial, which the no-card trial does not ask: ${value.slice(0, 80)}`,
         );
       }
     }
     expect(offenders).toEqual([]);
   });
 
-  test('the guard catches the phrasings worth catching', () => {
-    for (const claim of [
-      'Start free. No credit card required.',
-      'No card needed',
-      'No payment details required',
-      'Essai gratuit, sans carte bancaire',
-      'Prueba gratis, sin tarjeta de cr\u00e9dito',
-      'Wypr\u00f3buj bez karty kredytowej',
-    ]) {
-      expect(NO_CARD_CLAIM.test(claim)).toBe(true);
-    }
+  /** `[locale, namespace, key]` rows: each key in every locale, plus the keys only the English /us market carries. */
+  const rows = (everyLocale: ReadonlyArray<readonly [string, string]>, usOnly: ReadonlyArray<readonly [string, string]>) => [
+    ...LOCALES.flatMap((locale) => everyLocale.map(([namespace, key]) => [locale, namespace, key] as const)),
+    ...usOnly.map(([namespace, key]) => ['en', namespace, key] as const),
+  ];
+
+  /** The answers a visitor reads to learn how the trial starts: they say no card is required. */
+  const TRIAL_ANSWERS = rows(
+    [
+      ['landing.json', 'variant.faq.items[0].answer'],
+      ['landing.json', 'variant.faq.items[3].answer'],
+      ['pricing.json', 'pricingPage.faq.items[0].answer'],
+    ],
+    [
+      ['landing.json', 'variant.us.faq.items[0].answer'],
+      ['landing.json', 'variant.us.faq.items[3].answer'],
+    ],
+  );
+
+  test.each(TRIAL_ANSWERS)('%s/%s "%s" says no card is required', (locale, namespace, key) => {
+    expect(load(locale, namespace)[key]).toMatch(NO_CARD_CLAIM);
   });
 
-  test('it does not flag copy about the LOYALTY card', () => {
-    // The trap this guard fell into first: these are the product's own
-    // taglines, they are true, and they are shipping today.
-    for (const honest of [
-      'No app to download, no card to lose.',
-      'Sin aplicaci\u00f3n que descargar, sin tarjetas que perder.',
-      'Aucune appli \u00e0 t\u00e9l\u00e9charger, aucune carte \u00e0 perdre.',
-      'Bez aplikacji do pobrania, bez plastiku do zgubienia.',
-      '{trialDays} days free \u00b7 Cancel anytime',
-      'We ask for your card to start the trial.',
-    ]) {
-      expect(NO_CARD_CLAIM.test(honest)).toBe(false);
-    }
+  /** The short lines under a trial button, read at a glance: each says the trial length and that no card is required. */
+  const REASSURANCE_LINES = rows(
+    [
+      ['landing.json', 'variant.finalCta.reassurance'],
+      ['pricing.json', 'pricing.ctaSubtext'],
+      ['pricing.json', 'pricingPage.ctaSubtext'],
+    ],
+    [
+      ['landing.json', 'variant.us.hero.reassurance'],
+      ['landing.json', 'variant.us.finalCta.reassurance'],
+    ],
+  );
+
+  test.each(REASSURANCE_LINES)('%s/%s "%s" says the trial length and that no card is required', (locale, namespace, key) => {
+    const line = load(locale, namespace)[key];
+    expect(line).toContain('{trialDays}');
+    expect(line).toMatch(NO_CARD_CLAIM);
   });
 });

@@ -11,7 +11,7 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { DIGIT_DAYS, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
+import { CARD_NEEDED_CLAIM, DIGIT_DAYS, WORDED_TRIAL } from "../testing/copy-claims";
 import { ROOT, code } from "../testing/jsx-source";
 import { ALL, COPIES, MODULES, inPreviews, lines, objectsWith, offenders } from "../testing/landing-copy";
 import { PLAN_FACTS, availability } from "../plans/plan-facts";
@@ -34,8 +34,8 @@ describe("what these pages may not claim", () => {
     expect(ALL.length).toBeGreaterThan(150);
   });
 
-  test("no line promises a trial without a card", () => {
-    expect(offenders(NO_CARD_CLAIM)).toEqual([]);
+  test("no line says a card is needed to start the trial", () => {
+    expect(offenders(CARD_NEEDED_CLAIM)).toEqual([]);
   });
 
   test("no line writes the trial length in words: it is the {trialDays} token", () => {
