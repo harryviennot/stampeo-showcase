@@ -7,11 +7,13 @@ import { BLOG_LOCALES } from "../blog/locales";
 import { PLAN_FACTS, PLAN_NAMES, planMessageArgs, tiersWhere } from "./plan-facts";
 import { FEATURE_CATEGORIES } from "../pricing-features";
 import { catalogFiles, catalogStrings, loadCatalog, strictTranslator } from "../testing/catalogs";
+import { CARD_NEEDED, MONTH_TRIAL, type ClaimLocale } from "../testing/copy-claims";
 
 /**
  * Product claims the product does not back, kept out of every blog post and
  * every message catalog, in each locale's own words:
- * - "no card required": we ask for a card to start the free trial;
+ * - a card to start the trial: the free trial starts without one;
+ * - a month-long trial: the trial is the same short length in every market;
  * - offline scanning: the scanner needs a connection, and the pricing table
  *   marks offline scanning as coming soon;
  * - scheduled card styles: not in the dashboard yet, so only ever "coming soon";
@@ -61,7 +63,7 @@ const ROADMAP = [
 ];
 
 interface Wording {
-  noCard: RegExp;
+  cardNeeded: RegExp;
   offlineScan: RegExp;
   scheduledStyle: RegExp;
   openRate: RegExp;
@@ -81,8 +83,7 @@ const openRate = (term: string, email: string) =>
 
 const WORDING: Record<string, Wording> = {
   en: {
-    noCard:
-      /\bno (?:credit |debit |bank )?card(?: details)? (?:required|needed|to start|upfront)|\bno credit card|\bno card details|without (?:a |any )?(?:credit|debit|bank) card/i,
+    cardNeeded: CARD_NEEDED.en,
     offlineScan: offlineScan(
       "scan",
       "offline|without (?:an? )?(?:internet|wi-?fi|connection|signal|network)",
@@ -94,8 +95,7 @@ const WORDING: Record<string, Wording> = {
     locationNotify: /\bwalks?\s+(?:past|by)\b/i,
   },
   fr: {
-    noCard:
-      /sans (?:carte bancaire|carte de crédit|CB\b)|(?:aucune|pas de) carte bancaire (?:requise|demandée|nécessaire|à l'inscription)|carte bancaire non (?:requise|demandée)/i,
+    cardNeeded: CARD_NEEDED.fr,
     offlineScan: offlineScan(
       "scan",
       "hors[- ]ligne|sans (?:connexion|réseau|internet|wi-?fi)",
@@ -107,8 +107,7 @@ const WORDING: Record<string, Wording> = {
     locationNotify: /\bpass(?:e|ent)\s+(?:devant\b|à côté)/i,
   },
   es: {
-    noCard:
-      /sin (?:tarjeta (?:bancaria|de crédito|de débito)|necesidad de tarjeta(?! (?:de papel|física|de cartón))|pedir(?:te)? (?:una |la )?tarjeta)|no (?:se )?(?:necesita|requiere|pide) (?:una |la )?tarjeta/i,
+    cardNeeded: CARD_NEEDED.es,
     offlineScan: offlineScan(
       "escane|escáner",
       "sin conexión|no hay(?:a)? conexión|sin (?:internet|cobertura|red|wi-?fi)\\b",
@@ -120,8 +119,7 @@ const WORDING: Record<string, Wording> = {
     locationNotify: /\bpasan?\s+(?:por delante|al lado)\b/i,
   },
   pl: {
-    noCard:
-      /bez (?:podawania )?karty (?:płatniczej|kredytowej|debetowej)|bez podawania karty|nie (?:wymagamy|potrzeba|trzeba) karty (?:płatniczej|kredytowej)/i,
+    cardNeeded: CARD_NEEDED.pl,
     offlineScan: offlineScan(
       "skan",
       "bez (?:połączenia|internetu|zasięgu|sieci|wi-?fi)",
@@ -144,8 +142,12 @@ describe("product claims", () => {
         .filter(({ where, text }) => !(unlessSoon && (soon.test(text) || ROADMAP.some((r) => r.test(where)))))
         .map(({ where, text }) => `${where}: ${text.match(claim)?.[0]}`);
 
-    it(`${locale}: never says the free trial needs no card`, () => {
-      expect(offenders(wording.noCard)).toEqual([]);
+    it(`${locale}: never says a card is needed to start the free trial`, () => {
+      expect(offenders(wording.cardNeeded)).toEqual([]);
+    });
+
+    it(`${locale}: never writes the free trial as a month`, () => {
+      expect(offenders(MONTH_TRIAL[locale as ClaimLocale])).toEqual([]);
     });
 
     it(`${locale}: never says the scanner works offline`, () => {
@@ -198,12 +200,12 @@ describe("pricing table basket boosters", () => {
 
 describe("product claim wording", () => {
   it.each([
-    ["en", "noCard", "1 month free trial, no credit card required."],
-    ["en", "noCard", "a free month with no card required"],
-    ["en", "noCard", "No card details to start."],
-    ["fr", "noCard", "Le mois d'essai est gratuit, sans carte bancaire."],
-    ["es", "noCard", "un mes gratis sin necesidad de tarjeta"],
-    ["es", "noCard", "sin pedirte tarjeta bancaria para empezar"],
+    ["en", "cardNeeded", "We ask for a card to start the trial, and nothing is charged before it ends."],
+    ["en", "cardNeeded", "Every new business gets a free trial: a card is required to start it."],
+    ["fr", "cardNeeded", "Votre carte bancaire est demandée pour démarrer l'essai."],
+    ["fr", "cardNeeded", "Nous demandons votre carte pour démarrer l'essai."],
+    ["es", "cardNeeded", "Te pedimos una tarjeta para empezar la prueba."],
+    ["pl", "cardNeeded", "Do startu prosimy o kartę płatniczą."],
     ["en", "offlineScan", "One thing worth knowing: the scanner works offline."],
     ["en", "offlineScan", "One scan, one stamp. Even without internet."],
     ["fr", "offlineScan", "Le scanner fonctionne sans connexion internet"],
@@ -232,10 +234,12 @@ describe("product claim wording", () => {
   });
 
   it.each([
-    ["en", "noCard", "No app to download, no card to lose."],
-    ["en", "noCard", "We ask for a card to start the trial, and nothing is charged before it ends."],
-    ["fr", "noCard", "La carte se range dans Apple Wallet, à côté de sa carte bancaire."],
-    ["es", "noCard", "Te pedimos una tarjeta para empezar la prueba, pero no se cobra nada."],
+    ["en", "cardNeeded", "No app to download, no card to lose."],
+    ["en", "cardNeeded", "No card required to start. After 14 days, choose a plan and add your payment card."],
+    ["fr", "cardNeeded", "La carte se range dans Apple Wallet, à côté de sa carte bancaire."],
+    ["fr", "cardNeeded", "Sans carte bancaire pour démarrer, vous ajoutez la vôtre au moment de choisir un plan."],
+    ["es", "cardNeeded", "Empiezas sin tarjeta bancaria y la añades cuando eliges un plan."],
+    ["pl", "cardNeeded", "Zaczynasz bez karty płatniczej, a kartę dodajesz, gdy wybierzesz plan."],
     ["fr", "offlineScan", "La carte reste accessible hors ligne. Le QR code s'affiche même sans réseau."],
     ["es", "offlineScan", "La tarjeta se ve sin cobertura y el código se muestra igual."],
     ["en", "scheduledStyle", "Unlimited saved card styles"],

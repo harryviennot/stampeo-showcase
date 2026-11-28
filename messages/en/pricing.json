@@ -276,7 +276,7 @@
       "items": [
         {
           "question": "Is there a free trial?",
-          "answer": "Yes! Every plan includes a {trialDays}-day free trial. We ask for a card to start the trial, but you're not charged until they are up. Cancel anytime."
+          "answer": "Yes! Every plan includes a {trialDays}-day free trial, and no card is required to start. After the trial, choose a plan and add your payment card to keep going. Cancel anytime."
         },
         {
           "question": "Can I switch plans later?",

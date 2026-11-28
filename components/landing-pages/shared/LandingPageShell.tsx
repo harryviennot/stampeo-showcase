@@ -11,7 +11,7 @@ import type { RegionCurrency } from "@/lib/region-pricing";
 
 /**
  * The frame of a landing page: tracker, the market's header, the page, the market's footer. The server HTML has
- * the market's prices and trial length (dollars and 14 days in the US, euros and 30 days elsewhere).
+ * the market's prices and trial length (dollars in the US, euros elsewhere, 14 days in both).
  */
 export async function LandingPageShell({
   slug,

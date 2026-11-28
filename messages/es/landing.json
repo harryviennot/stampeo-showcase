@@ -420,7 +420,7 @@
       "items": [
         {
           "question": "¿Cuánto cuesta?",
-          "answer": "El plan Starter cuesta {starterPrice}/mes. Sin gastos de alta, sin compromiso. Empiezas con {trialDays} días gratis. Te pedimos la tarjeta para empezar la prueba, sin ningún cobro antes de que acaben."
+          "answer": "El plan Starter cuesta {starterPrice}/mes. Sin gastos de alta, sin compromiso. Empiezas con {trialDays} días gratis, sin tarjeta bancaria. Después, eliges un plan y añades tu tarjeta bancaria para seguir."
         },
         {
           "question": "¿Tengo que cambiar de caja?",
@@ -432,7 +432,7 @@
         },
         {
           "question": "¿Qué pasa cuando termina la prueba gratuita?",
-          "answer": "Eliges si sigues o no. Te pedimos la tarjeta para iniciar la prueba, pero no hay ningún cargo antes de que terminen los {trialDays} días. Puedes cancelar en cualquier momento antes de esa fecha."
+          "answer": "Eliges si sigues o no. Para empezar no hace falta tarjeta bancaria y no se cobra nada durante la prueba. Al terminar los {trialDays} días, eliges un plan y añades tu tarjeta bancaria para seguir. Si no eliges ninguno, tu cuenta queda en pausa y tus clientes conservan la tarjeta que ya tienen en el teléfono."
         },
         {
           "question": "¿Mis datos están seguros?",

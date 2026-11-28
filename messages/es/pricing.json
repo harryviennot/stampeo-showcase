@@ -276,7 +276,7 @@
       "items": [
         {
           "question": "¿Hay una prueba gratuita?",
-          "answer": "¡Sí! Todos los planes incluyen una prueba gratis de {trialDays} días. Te pedimos una tarjeta bancaria para empezar la prueba, pero no se hace ningún cargo hasta que terminan. Cancela cuando quieras."
+          "answer": "¡Sí! Todos los planes incluyen una prueba gratis de {trialDays} días, sin tarjeta bancaria para empezar. Al terminar, eliges un plan y añades tu tarjeta bancaria para seguir. Cancela cuando quieras."
         },
         {
           "question": "¿Puedo cambiar de plan más adelante?",

@@ -1,6 +1,6 @@
 /**
  * What a visitor of each homepage reads, through the real routes: `/`, `/en`, `/es`, `/pl` and `/uk` quote euros and
- * a 30-day trial, `/us` dollars and 14 days. The route's default export is rendered whole (the page, its shell and
+ * the 14-day trial, `/us` dollars and the same 14 days. The route's default export is rendered whole (the page, its shell and
  * the shell's pricing provider), as the server sends it before the browser's region can change anything, and the
  * homepage's structured data is read from the same render.
  */
@@ -42,7 +42,7 @@ const ukHome = await import("@/app/[locale]/uk/page");
 
 type Terms = { currency: "eur" | "usd"; trialDays: number };
 
-const EURO: Terms = { currency: "eur", trialDays: 30 };
+const EURO: Terms = { currency: "eur", trialDays: 14 };
 const DOLLAR: Terms = { currency: "usd", trialDays: 14 };
 
 /** Each homepage URL, the language it is read in and what it quotes. */
@@ -88,7 +88,8 @@ describe.each(HOMEPAGES)("%s", (path, locale, { currency, trialDays }) => {
     const text = textOf(await visit(path, locale));
     const { reassurance } = landingCopy(locale, path === "/us" ? "us" : "int").shared.SHARED;
     const pricing = createTranslator({ locale, messages: loadCatalog(locale), namespace: "pricing" });
-    const other = trialDays === 14 ? 30 : 14;
+    // The retired 30-day trial: a page that still prints it promises what the backend no longer grants.
+    const other = 30;
 
     const times = (line: string) => text.split(line).length - 1;
 

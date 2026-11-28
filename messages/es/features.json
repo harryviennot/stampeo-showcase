@@ -553,7 +553,7 @@
       ],
       "cta": {
         "title": "Cada cliente al día, en automático",
-        "subtitle": "Los avisos transaccionales están incluidos en todos los planes. Empieza tu mes gratis y recompensa cada visita desde el primer día."
+        "subtitle": "Los avisos transaccionales están incluidos en todos los planes. Empieza tu prueba gratis y recompensa cada visita desde el primer día."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -802,7 +802,7 @@
       ],
       "cta": {
         "title": "Está presente en el momento justo",
-        "subtitle": "La geolocalización llega pronto al plan Pro. Empieza tu mes gratis ya y tu tarjeta estará lista cuando se lance."
+        "subtitle": "La geolocalización llega pronto al plan Pro. Empieza tu prueba gratis ya y tu tarjeta estará lista cuando se lance."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1053,7 +1053,7 @@
       },
       "cta": {
         "title": "Tu próxima difusión, en el bolsillo de tus clientes",
-        "subtitle": "Empieza tu mes gratis y envía tu primera difusión a la tarjeta esta semana."
+        "subtitle": "Empieza tu prueba gratis y envía tu primera difusión a la tarjeta esta semana."
       },
       "related": [
         "notifications-push",

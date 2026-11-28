@@ -5,12 +5,11 @@ import type { Market } from "./markets";
 /**
  * Market-scoped copy: the same language, written for a different country.
  *
- * `/us` quotes dollars, grants a 14-day trial and hides the "Made in Europe"
- * strip, but it renders from the English catalog. What it also needs is
- * different English: an American small-business owner is sold to differently
- * than the generic international reader, and a few of our strings are simply
- * false in the US ("no commitment" is not the phrase, a free month is not the
- * trial).
+ * `/us` quotes dollars and hides the "Made in Europe" strip, but it renders
+ * from the English catalog. What it also needs is different English: an
+ * American small-business owner is sold to differently than the generic
+ * international reader, and a few of our strings are simply wrong in the US
+ * ("no commitment" is not the phrase).
  *
  * A new `en-US` LOCALE would be the obvious way to get that and is the wrong
  * one. Locale, market and billing currency are three axes this codebase keeps

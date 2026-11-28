@@ -42,7 +42,7 @@ type PricingTierCardProps = {
   subLabel?: string;
   cta: string;
   ctaHref: string;
-  /** Small line below the CTA — "30-day free trial · Cancel anytime" */
+  /** Small line below the CTA — "14-day free trial · Cancel anytime" */
   ctaSubtext?: string;
   highlighted?: boolean;
   popularLabel?: string;

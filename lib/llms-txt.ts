@@ -283,7 +283,7 @@ function priceBlock({ heading, market, pricing, links }: PriceBlock): string {
     "",
     ...monthly,
     `- Yearly billing is ${FOUNDING_PRICING.yearlyDiscountPercent}% off: ${perMonth.join(" / ")} per month, billed ${perYear.join(" / ")} a year.`,
-    `- ${trialDays}-day free trial on every plan. A card is required to start the trial but is not charged until the ${trialDays} days are up.`,
+    `- ${trialDays}-day free trial on every plan, no card required to start. After the ${trialDays} days, the business chooses a plan and adds a card to keep going.`,
     ...links.map((link) => `- ${link}`),
   ].join("\n");
 }
@@ -313,9 +313,15 @@ function pricingSection(ladders: { eur: Pricing; usd: Pricing }): string {
   ].join("\n");
 }
 
+/** The trial as the FAQ words it: one length when every market grants the same. */
+const TRIAL_LENGTH =
+  MARKETS.int.trialDays === MARKETS.us.trialDays
+    ? `${MARKETS.int.trialDays} days`
+    : `${MARKETS.int.trialDays} days in Europe and the rest of the world, ${MARKETS.us.trialDays} days in the United States`;
+
 const FAQ = `## FAQ (condensed)
 
-- **Is there a free trial?** Yes, on every plan: ${MARKETS.int.trialDays} days in Europe and the rest of the world, ${MARKETS.us.trialDays} days in the United States. A card is required to start the trial, but nothing is charged until the trial ends. Cancel anytime.
+- **Is there a free trial?** Yes, on every plan: ${TRIAL_LENGTH}, no card required to start. Nothing is charged during the trial. To keep going afterwards, the business chooses a plan and adds a card. Without a plan the account is paused and customers keep the cards already in their wallets. Cancel anytime.
 - **Can I switch plans?** Yes, at any time. Upgrades take effect immediately; downgrades at the end of the billing cycle.
 - **Are there per-customer charges?** No. Every plan includes unlimited customers and unlimited scans.
 - **Do customers need to download an app?** No. Apple Wallet and Google Wallet are pre-installed on every modern smartphone. Customers scan a QR code and the card is saved in about ten seconds.

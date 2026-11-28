@@ -34,12 +34,12 @@ export interface MarketConfig {
   label: string;
   /**
    * Free-trial length in days for this market, mirroring
-   * `backend/app/core/pricing_region.TRIAL_DAYS_BY_COUNTRY`.
+   * `backend/app/core/pricing_region.TRIAL_DAYS_BY_COUNTRY` and the standard
+   * length beside it.
    *
-   * It lives here because it is a PROMISE made in copy, and QA found /us
-   * offering "30-day free trial" one click before Stripe granted 14. A number
-   * written into eight strings across four locales cannot track a backend
-   * constant; a number read from one place can.
+   * It lives here because it is a PROMISE made in copy. A number written into
+   * strings across four locales cannot track a backend constant; a number read
+   * from one place can.
    */
   trialDays: number;
   /**
@@ -62,7 +62,7 @@ export const MARKETS: Record<Market, MarketConfig> = {
     currency: { symbol: "€", code: "EUR" },
     europeTrust: true,
     label: "int",
-    trialDays: 30,
+    trialDays: 14,
     // Not a pilot: /en is the homepage, indexed through the normal locale
     // cluster rather than this one.
     indexable: false,
@@ -81,7 +81,7 @@ export const MARKETS: Record<Market, MarketConfig> = {
     currency: { symbol: "€", code: "EUR" },
     europeTrust: true,
     label: "uk",
-    trialDays: 30,
+    trialDays: 14,
     // Stays noindex while the line above says EUR. Indexing a "UK" page that
     // quotes euros ranks a promise we would not honour.
     indexable: false,
