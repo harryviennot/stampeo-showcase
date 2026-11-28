@@ -51,15 +51,9 @@ Stampeo udostępnia firmom platformę, która pozwala:
 
 Nowe konto może otrzymać **bezpłatny okres próbny** bez zobowiązań. Jego długość jest podana przy rejestracji, w płatności Stripe i w panelu, i może się różnić w zależności od rynku lub oferty. Okres próbny daje dostęp do wszystkich funkcji wybranego planu.
 
-{/* HARRY REVIEW: STA-582, the free trial needs no payment method. Remove this marker once reviewed, before release. */}
-
 Standardowy bezpłatny okres próbny trwa **14 dni**, a do jego rozpoczęcia **nie jest wymagana żadna metoda płatności**. W dowolnym momencie okresu próbnego Użytkownik Business może wybrać plan i dodać kartę płatniczą w panelu. Dodanie karty nie kończy okresu próbnego, a przed jego zakończeniem nie jest pobierana żadna kwota. Jeżeli karta została dodana, Subskrypcja rozpoczyna się automatycznie po zakończeniu okresu próbnego w cenie wybranego planu i cyklu rozliczeniowego, chyba że zostanie wcześniej anulowana w panelu.
 
-{/* HARRY REVIEW: STA-582, the free trial needs no payment method. Remove this marker once reviewed, before release. */}
-
 Jeżeli po zakończeniu okresu próbnego Użytkownik Business nie wybrał planu i nie dodał metody płatności, okres próbny kończy się, a usługa zostaje wstrzymana: panel, dodawanie pieczątek, odbieranie nagród i rejestracja nowych klientów są niedostępne do czasu rozpoczęcia Subskrypcji. Po bezpłatnym okresie próbnym nie obowiązuje okres tolerancji. Dane są zachowane. Karty zainstalowane już w portfelach klientów pozostają na miejscu, ale nie są dłużej aktualizowane.
-
-{/* HARRY REVIEW: STA-582, the free trial needs no payment method. Remove this marker once reviewed, before release. */}
 
 **3-dniowy okres tolerancji** obowiązuje wyłącznie wtedy, gdy nie powiedzie się płatność należna z tytułu płatnej Subskrypcji, w tym pierwsza płatność po zakończeniu okresu próbnego, w którym dodano kartę. W tym czasie panel pozostaje w pełni funkcjonalny, co pozwala zaktualizować metodę płatności bez przerwy w usłudze. Po upływie okresu tolerancji, jeżeli płatność nie została dokonana, dostęp przechodzi w **tryb tylko do odczytu**: operacje zapisu (tworzenie klientów, dodawanie pieczątek, zmiany wzoru karty) są zablokowane, ale dane pozostają dostępne i są zachowane. Karty zainstalowane już w portfelach klientów pozostają na miejscu, ale nie są dłużej aktualizowane.
 
@@ -322,8 +316,6 @@ W zakresie dozwolonym przez prawo:
 Zgodnie z art. L221-28 francuskiego Kodeksu konsumenckiego prawo odstąpienia nie ma zastosowania do umów o dostarczanie treści cyfrowych niedostarczanych na nośniku materialnym, których wykonywanie rozpoczęło się za zgodą konsumenta.
 
 Wykupując Subskrypcję i rozpoczynając korzystanie z Platformy, Użytkownik Business przyjmuje do wiadomości i akceptuje utratę prawa odstąpienia.
-
-{/* HARRY REVIEW: STA-582, the free trial needs no payment method. Remove this marker once reviewed, before release. */}
 
 Bezpłatny okres próbny pozwala jednak przetestować usługę bez opłat i bez zobowiązań: do jego rozpoczęcia nie jest wymagana żadna metoda płatności, karta dodana w trakcie okresu próbnego nie jest obciążana przed jego końcem, a Subskrypcję można anulować w każdej chwili przed tą datą.
 

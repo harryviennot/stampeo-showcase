@@ -658,53 +658,52 @@ describe('the site never says a card is needed to start the trial', () => {
         if (!CARD_NEEDED_CLAIM.test(value)) continue;
         offenders.push(
           `messages/${locale}/${namespace} "${key}" makes a card a condition of ` +
-            `starting the trial, which the no-card trial no longer asks: ${value.slice(0, 80)}`,
+            `starting the trial, which the no-card trial does not ask: ${value.slice(0, 80)}`,
         );
       }
     }
     expect(offenders).toEqual([]);
   });
 
-  /** The answers a visitor reads to learn how the trial starts: they say no card is required. */
-  const TRIAL_ANSWERS = [
-    ['landing.json', 'variant.faq.items[0].answer'],
-    ['landing.json', 'variant.faq.items[3].answer'],
-    ['pricing.json', 'pricingPage.faq.items[0].answer'],
-  ] as const;
+  /** `[locale, namespace, key]` rows: each key in every locale, plus the keys only the English /us market carries. */
+  const rows = (everyLocale: ReadonlyArray<readonly [string, string]>, usOnly: ReadonlyArray<readonly [string, string]>) => [
+    ...LOCALES.flatMap((locale) => everyLocale.map(([namespace, key]) => [locale, namespace, key] as const)),
+    ...usOnly.map(([namespace, key]) => ['en', namespace, key] as const),
+  ];
 
-  test.each(LOCALES.flatMap((locale) => TRIAL_ANSWERS.map(([namespace, key]) => [locale, namespace, key] as const)))(
-    '%s/%s "%s" says no card is required',
-    (locale, namespace, key) => {
-      expect(load(locale, namespace)[key]).toMatch(NO_CARD_CLAIM);
-    },
+  /** The answers a visitor reads to learn how the trial starts: they say no card is required. */
+  const TRIAL_ANSWERS = rows(
+    [
+      ['landing.json', 'variant.faq.items[0].answer'],
+      ['landing.json', 'variant.faq.items[3].answer'],
+      ['pricing.json', 'pricingPage.faq.items[0].answer'],
+    ],
+    [
+      ['landing.json', 'variant.us.faq.items[0].answer'],
+      ['landing.json', 'variant.us.faq.items[3].answer'],
+    ],
   );
 
-  test.each(['variant.us.faq.items[0].answer', 'variant.us.faq.items[3].answer'])('en/landing.json "%s" says no card is required', (key) => {
-    expect(load('en', 'landing.json')[key]).toMatch(NO_CARD_CLAIM);
+  test.each(TRIAL_ANSWERS)('%s/%s "%s" says no card is required', (locale, namespace, key) => {
+    expect(load(locale, namespace)[key]).toMatch(NO_CARD_CLAIM);
   });
 
   /** The short lines under a trial button, read at a glance: each says the trial length and that no card is required. */
-  const REASSURANCE_LINES = [
-    ['landing.json', 'variant.finalCta.reassurance'],
-    ['pricing.json', 'pricing.ctaSubtext'],
-    ['pricing.json', 'pricingPage.ctaSubtext'],
-  ] as const;
-
-  test.each(LOCALES.flatMap((locale) => REASSURANCE_LINES.map(([namespace, key]) => [locale, namespace, key] as const)))(
-    '%s/%s "%s" says the trial length and that no card is required',
-    (locale, namespace, key) => {
-      const line = load(locale, namespace)[key];
-      expect(line).toContain('{trialDays}');
-      expect(line).toMatch(NO_CARD_CLAIM);
-    },
+  const REASSURANCE_LINES = rows(
+    [
+      ['landing.json', 'variant.finalCta.reassurance'],
+      ['pricing.json', 'pricing.ctaSubtext'],
+      ['pricing.json', 'pricingPage.ctaSubtext'],
+    ],
+    [
+      ['landing.json', 'variant.us.hero.reassurance'],
+      ['landing.json', 'variant.us.finalCta.reassurance'],
+    ],
   );
 
-  test.each(['variant.us.hero.reassurance', 'variant.us.finalCta.reassurance'])(
-    'en/landing.json "%s" says the trial length and that no card is required',
-    (key) => {
-      const line = load('en', 'landing.json')[key];
-      expect(line).toContain('{trialDays}');
-      expect(line).toMatch(NO_CARD_CLAIM);
-    },
-  );
+  test.each(REASSURANCE_LINES)('%s/%s "%s" says the trial length and that no card is required', (locale, namespace, key) => {
+    const line = load(locale, namespace)[key];
+    expect(line).toContain('{trialDays}');
+    expect(line).toMatch(NO_CARD_CLAIM);
+  });
 });

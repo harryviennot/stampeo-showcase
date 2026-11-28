@@ -1,9 +1,6 @@
 import { describe, expect, it } from "bun:test";
-import { renderToStaticMarkup } from "react-dom/server";
 import { routing } from "@/i18n/routing";
 import { MARKETS } from "../markets";
-import { getLegalContent } from "./index";
-import { compileLegalMDX } from "./mdx";
 import { termsSection } from "./policy-test-utils";
 
 /**
@@ -21,7 +18,7 @@ const DAY_WORD: Record<string, string> = { en: "days", fr: "jours", es: "días",
 interface Wording {
   /** The trial needs no payment method to start. */
   noPaymentMethod: RegExp;
-  /** The retired promise: a card is requested at signup and not debited before the trial ends. */
+  /** The card-at-signup wording the terms must not carry: a card requested at signup to start the trial. */
   cardAtSignup: RegExp;
   /** Without a plan at the end of the trial, the service is paused. */
   paused: RegExp;
@@ -70,11 +67,11 @@ const WORDING: Record<string, Wording> = {
 const s51 = (locale: string) => termsSection(locale, /^###\s+5\.1\s/m, /^###\s+5\.2\s/m);
 const s12 = (locale: string) => termsSection(locale, /^##\s+12\.\s/m, /^##\s+13\.\s/m);
 
-/** The paragraphs of a section, without the review markers. */
+/** The paragraphs of a section. */
 const paragraphs = (section: string) =>
   section
     .split(/\n{2,}/)
-    .map((paragraph) => paragraph.replace(/\{\/\*[\s\S]*?\*\/\}/g, "").trim())
+    .map((paragraph) => paragraph.trim())
     .filter(Boolean);
 
 describe("every market's trial is the one number the terms state", () => {
@@ -91,7 +88,7 @@ describe.each(routing.locales)("Terms §5.1 free trial (%s)", (locale) => {
     expect(s51(locale)).toMatch(new RegExp(`\\b${days}\\s+${DAY_WORD[locale]}\\b`, "i"));
   });
 
-  it("says no payment method is required to start it, and no longer says a card is requested at signup", () => {
+  it("says no payment method is required to start it, and does not say a card is requested at signup", () => {
     expect(s51(locale)).toMatch(wording.noPaymentMethod);
     expect(s51(locale)).not.toMatch(wording.cardAtSignup);
   });
@@ -112,15 +109,5 @@ describe.each(routing.locales)("Terms §5.1 free trial (%s)", (locale) => {
 describe.each(routing.locales)("Terms §12 right of withdrawal (%s)", (locale) => {
   it("does not say a card is requested at signup for the trial", () => {
     expect(s12(locale)).not.toMatch(WORDING[locale].cardAtSignup);
-  });
-});
-
-describe("the terms render with their review markers", () => {
-  it.each(routing.locales)("the terms still compile, and no marker reaches the page (%s)", async (locale) => {
-    const legal = getLegalContent("terms", locale)!;
-    const html = renderToStaticMarkup(await compileLegalMDX(legal.content));
-
-    expect(html).not.toContain("HARRY REVIEW");
-    expect(html).toContain("<h3");
   });
 });

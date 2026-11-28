@@ -98,7 +98,7 @@ export const WORDED_TRIAL = new RegExp(
  *
  * The LOYALTY card is the product: "no card to lose", "sin tarjetas que
  * perder" are good copy about something else. The PAYMENT card is the one the
- * trial no longer asks for, so the site may say a card is not required to
+ * trial does not ask for, so the site may say a card is not required to
  * start. Every branch below is anchored to the payment sense: an English "no
  * card" only counts when it is "required"/"needed", and the other languages
  * must name the card type or the verb. A looser pattern would match the

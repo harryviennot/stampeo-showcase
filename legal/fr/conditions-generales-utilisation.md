@@ -53,15 +53,9 @@ Le service comprend la conception de la première carte de fidélité par nos so
 
 Tout nouveau compte peut bénéficier d'un **essai gratuit**, sans engagement. Sa durée est indiquée à l'inscription, dans le paiement Stripe et dans le tableau de bord, et peut varier selon le marché ou l'offre. L'essai donne accès à l'ensemble des fonctionnalités du plan souscrit.
 
-{/* HARRY REVIEW: STA-582, the free trial needs no payment method. Remove this marker once reviewed, before release. */}
-
 L'essai gratuit standard dure **14 jours** et **aucun moyen de paiement n'est exigé pour le démarrer**. À tout moment pendant l'essai, l'Utilisateur Business peut choisir un plan et ajouter une carte bancaire depuis le tableau de bord. L'ajout d'une carte ne met pas fin à l'essai et aucun montant n'est débité avant sa fin. Lorsqu'une carte a été ajoutée, l'Abonnement démarre automatiquement à la fin de l'essai, au tarif du plan et de la périodicité choisis, sauf résiliation depuis le tableau de bord avant cette date.
 
-{/* HARRY REVIEW: STA-582, the free trial needs no payment method. Remove this marker once reviewed, before release. */}
-
 Si, à la fin de l'essai, l'Utilisateur Business n'a pas choisi de plan ni ajouté de moyen de paiement, l'essai prend fin et le service est mis en pause : le tableau de bord, l'ajout de tampons, l'utilisation des récompenses et l'inscription de nouveaux clients ne sont plus disponibles tant qu'un Abonnement n'est pas souscrit. Aucune période de tolérance ne s'applique après un essai gratuit. Les données sont conservées. Les Pass déjà distribués restent installés dans Apple Wallet ou Google Wallet mais ne sont plus mis à jour.
-
-{/* HARRY REVIEW: STA-582, the free trial needs no payment method. Remove this marker once reviewed, before release. */}
 
 Une **période de tolérance de 3 jours** ne s'applique que lorsqu'un paiement dû au titre d'un Abonnement payant échoue, y compris le premier paiement à la fin d'un essai pour lequel une carte a été ajoutée. Pendant cette période, le tableau de bord reste pleinement fonctionnel, afin de permettre la mise à jour du moyen de paiement sans interruption du service. Passé ce délai sans paiement, l'accès bascule en **mode lecture seule** : les opérations d'écriture (création de clients, ajout de tampons, modification du style de carte) sont bloquées, mais les données restent accessibles et conservées. Les Pass déjà distribués restent installés dans Apple Wallet ou Google Wallet mais ne sont plus mis à jour.
 
@@ -330,8 +324,6 @@ Dans les limites autorisées par la loi :
 Conformément à l'article L221-28 du Code de la consommation, le droit de rétractation ne s'applique pas aux contrats de fourniture de contenu numérique non fourni sur support matériel dont l'exécution a commencé avec l'accord du consommateur.
 
 En souscrivant un Abonnement et en commençant à utiliser la Plateforme, l'Utilisateur Business reconnaît et accepte la perte de son droit de rétractation.
-
-{/* HARRY REVIEW: STA-582, the free trial needs no payment method. Remove this marker once reviewed, before release. */}
 
 Toutefois, l'essai gratuit permet de tester le service sans frais ni engagement : aucun moyen de paiement n'est exigé pour le démarrer, toute carte ajoutée pendant l'essai n'est pas débitée avant la fin de l'essai, et l'Abonnement peut être résilié à tout moment avant cette date.
 

@@ -88,7 +88,7 @@ describe.each(HOMEPAGES)("%s", (path, locale, { currency, trialDays }) => {
     const text = textOf(await visit(path, locale));
     const { reassurance } = landingCopy(locale, path === "/us" ? "us" : "int").shared.SHARED;
     const pricing = createTranslator({ locale, messages: loadCatalog(locale), namespace: "pricing" });
-    // The retired 30-day trial: a page that still prints it promises what the backend no longer grants.
+    // No market grants 30 days: a page that prints it promises a trial the backend does not give.
     const other = 30;
 
     const times = (line: string) => text.split(line).length - 1;

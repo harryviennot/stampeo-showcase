@@ -53,15 +53,9 @@ El servicio incluye el diseño de la primera tarjeta de fidelidad por nuestra pa
 
 Toda cuenta nueva puede disponer de una **prueba gratuita**, sin compromiso. Su duración se indica al registrarse, en el pago de Stripe y en el panel, y puede variar según el mercado o la oferta. La prueba da acceso al conjunto de las funcionalidades del plan suscrito.
 
-{/* HARRY REVIEW: STA-582, the free trial needs no payment method. Remove this marker once reviewed, before release. */}
-
 La prueba gratuita estándar dura **14 días** y **no se exige ningún método de pago para iniciarla**. En cualquier momento durante la prueba, el Usuario Business puede elegir un plan y añadir una tarjeta bancaria desde el panel. Añadir una tarjeta no pone fin a la prueba y no se cobra ningún importe antes de que termine. Cuando se ha añadido una tarjeta, la Suscripción se inicia automáticamente al finalizar la prueba, a la tarifa del plan y de la periodicidad elegidos, salvo cancelación desde el panel antes de esa fecha.
 
-{/* HARRY REVIEW: STA-582, the free trial needs no payment method. Remove this marker once reviewed, before release. */}
-
 Si, al finalizar la prueba, el Usuario Business no ha elegido un plan ni añadido un método de pago, la prueba termina y el servicio se pone en pausa: el panel, la adición de sellos, el canje de recompensas y el registro de nuevos clientes dejan de estar disponibles hasta que se inicie una Suscripción. Tras una prueba gratuita no se aplica ningún periodo de tolerancia. Los datos se conservan. Las Tarjetas ya distribuidas permanecen instaladas en Apple Wallet o Google Wallet, pero dejan de actualizarse.
-
-{/* HARRY REVIEW: STA-582, the free trial needs no payment method. Remove this marker once reviewed, before release. */}
 
 Un **periodo de tolerancia de 3 días** solo se aplica cuando falla un pago debido en virtud de una Suscripción de pago, incluido el primer pago al final de una prueba para la que se añadió una tarjeta. Durante ese periodo el panel sigue siendo plenamente funcional, para poder actualizar el método de pago sin interrupción del servicio. Transcurrido ese plazo sin pago, el acceso pasa a **modo de solo lectura**: las operaciones de escritura (creación de clientes, adición de sellos, modificación del estilo de tarjeta) quedan bloqueadas, pero los datos siguen siendo accesibles y se conservan. Las Tarjetas ya distribuidas permanecen instaladas en Apple Wallet o Google Wallet, pero dejan de actualizarse.
 
@@ -330,8 +324,6 @@ Dentro de los límites permitidos por la ley:
 De conformidad con el artículo L221-28 del Código de Consumo francés, el derecho de desistimiento no se aplica a los contratos de suministro de contenido digital no facilitado en un soporte material cuya ejecución haya comenzado con el acuerdo del consumidor.
 
 Al suscribir una Suscripción y comenzar a utilizar la Plataforma, el Usuario Business reconoce y acepta la pérdida de su derecho de desistimiento.
-
-{/* HARRY REVIEW: STA-582, the free trial needs no payment method. Remove this marker once reviewed, before release. */}
 
 No obstante, la prueba gratuita permite probar el servicio sin coste ni compromiso: no se exige ningún método de pago para iniciarla, ninguna tarjeta añadida durante la prueba se cobra antes del fin de la prueba, y la Suscripción puede cancelarse en cualquier momento antes de esa fecha.
 

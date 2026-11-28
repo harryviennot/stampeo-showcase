@@ -32,7 +32,7 @@ describe("the worded trial guard", () => {
   });
 });
 
-/** The trial as every language wrote it when it was a month: each is a promise the backend no longer keeps. */
+/** A trial written as a month in each language: a length no market grants. */
 const MONTH_SHAPES: ReadonlyArray<readonly [ClaimLocale, string]> = [
   ["en", "Start your free month and reward visits from day one."],
   ["en", "One month free, no commitment."],
@@ -126,7 +126,7 @@ describe("the no-card claim the site may make", () => {
   });
 });
 
-/** Every sentence that made the card a condition of starting, as it shipped, plus the shapes it could take. */
+/** Sentences that make a payment card a condition of starting the trial, in each language. */
 const CARD_NEEDED_SHAPES: ReadonlyArray<readonly [ClaimLocale, string]> = [
   ["en", "We ask for your card to begin the trial, with no charge before they are up."],
   ["en", "We ask for a card to start the trial, and nothing is charged before the 14 days are up."],
